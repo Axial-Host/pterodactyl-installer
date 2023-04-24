@@ -3,7 +3,7 @@ mkdir /root/axialhost-install
 
 echo "Je télécharge tout"
 cd /root/axialhost-install
-curl -O https://beta.axial-host.net/ptero-install/ptero-install.zip
+curl -O https://axial-host.fr/ptero-install/ptero-install.zip
 
 cd /root/axialhost-install
 unzip ptero-install.zip
