@@ -15,9 +15,8 @@ echo "################################################${neutre}"
 echo "Début de l'installation dans 5 secondes"
 sleep 5
 clear
+ip=1.2.3.4
 echo "################################################"
-echo "#                                              #"
-echo "#          Début de la désinstallation         #"
 echo "#                                              #"
 echo "#       Pour commencer veuillez confirmer      #"
 echo "#                                              #"
@@ -26,9 +25,9 @@ echo ''
 echo ''
 echo ''
 
-read -r -p "Confirmez-vous le début de la désinstallation de pterodactyl ? [ O / N ] " confirme
-while [ $confirme != "O" ]  && [ $confirme != "N" ] && [ $confirme != "o" ] && [ $confirme != "n" ]; do 
-read -r -p "Confirmez-vous le début de la désinstallation de pterodactyl ? [ O / Y / N ] " confirme
+read -r -p "Confirmer ? [ O / N ] " confirme
+while [ $confirme != "O" ] && [ $confirme != "N" ] && [ $confirme != "o" ] && [ $confirme != "n" ]; do
+read -r -p "Confirmer ? [ O / N ] " confirme
 done
 
 if [ $confirme = "n" ] || [ $confirme = "N" ]; then
@@ -40,91 +39,59 @@ sleep 2
 fi
 
 if [ $confirme = "o" ] || [ $confirme = "O" ]; then
-clear 
+cd /var/www/pterodactyl
 echo "################################################"
 echo "#                                              #"
-echo "#          Début de la désinstallation         #"
+echo "#            Création de l'utilisateur         #"
 echo "#                                              #"
 echo "################################################"
-sudo rm -rf /var/www/pterodactyl
-sudo rm /etc/systemd/system/pteroq.service
-sudo unlink /etc/nginx/sites-enabled/pterodactyl.conf
-sudo unlink /etc/apache2/sites-enabled/pterodactyl.conf
-sudo systemctl stop wings
-sudo rm -rf /var/lib/pterodactyl
-sudo rm -rf /etc/pterodactyl
-sudo rm /usr/local/bin/wings
-sudo rm /etc/systemd/system/wings.service
+sleep 2 
+echo "################################################"
+echo "#                                              #"
+echo "#    Quelle est l'adresse email du compte ?    #"
+echo "#                                              #"
+echo "################################################"
+read -r -p "Indique ton adresse email : " email
+echo "################################################"
+echo "#                                              #"
+echo "#   Quel sera l'identifiant de connexion ?     #"
+echo "#                                              #"
+echo "################################################"
+    read -r -p "Indique ton identifiant de connexion : " user
+echo "################################################"
+echo "#                                              #"
+echo "#     Quel est le prénom du compte ?            #"
+echo "#                                              #"
+echo "################################################"
+    read -r -p "Indique ton prénom : " prenom
+echo "################################################"
+echo "#                                              #"
+echo "#    Quel est le nom de famille du compte ?    #"
+echo "#                                              #"
+echo "################################################"
+    read -r -p "Indique ton nom de famille : " famille
+echo "################################################"
+echo "#                                              #"
+echo "#   Quel sera le mot de passe de connexion ?   #"
+echo "#                                              #"
+echo "################################################"
+    read -r -p "Indique ton mot de passe de connexion : " mdp2
+sleep 3
 clear
 echo "################################################"
 echo "#                                              #"
-echo "#  Voulez-vous désinstaller votre Web Server ? #"
+echo "#      Création de l'utilisateur en cours      #"
 echo "#                                              #"
 echo "################################################"
-read -r -p "[ O / N ] " webserver
-if [ $webserver = "o" ] || [ $webserver = "O" ]; then
+cd /var/www/pterodactyl
+php artisan p:user:make --email=$email --username=$user --name-first=$prenom --name-last=$famille --password=$mdp2
+sleep 10
 echo "################################################"
 echo "#                                              #"
-echo "#   Quel Logiciel Web Server Utilisée vous ?   #"
+echo "#      Création de l'utilisateur terminée      #"
 echo "#                                              #"
 echo "################################################"
-read -r -p "[ nginx / apache2 ] " logiciel
-while [ $logiciel != "apache2" ] && [ $logiciel != "nginx" ]; do
-read -r -p "[ nginx / apache2 ] " logiciel
-done
-if [ $logiciel = "nginx" ]; then 
-apt remove nginx -y && apt purge nginx* -y && apt autoremove -y >/dev/null 2>&1 
-clear
 rm -r /root/axialhost-install/
-echo "################################################"
-echo "#                                              #"
-echo "#       La désinstallation est terminée        #"
-echo "#                                              #"
-echo "################################################"
-echo "################################################"
-echo "#                                              #"
-echo "#   Notre script ne supprime pas les bases de  #"
-echo "#                                              #"
-echo "#           données par sécurité               #"
-echo "#                                              #"
-echo "################################################"
-sleep 4
-fi
-if [ $logiciel = "apache2" ]; then 
-apt remove apache2 -y && apt purge apache2* -y && apt autoremove -y >/dev/null 2>&1 
-clear
-rm -r /root/axialhost-install/
-echo "################################################"
-echo "#                                              #"
-echo "#       La désinstallation est terminée        #"
-echo "#                                              #"
-echo "################################################"
-echo "################################################"
-echo "#                                              #"
-echo "#   Notre script ne supprime pas les bases de  #"
-echo "#                                              #"
-echo "#           données par sécurité               #"
-echo "#                                              #"
-echo "################################################"
-sleep 4
-fi
-fi
-if [ $webserver = "n" ] || [ $webserver = "N" ]; then
-clear
-rm -r /root/axialhost-install/
-echo "################################################"
-echo "#                                              #"
-echo "#       La désinstallation est terminée        #"
-echo "#                                              #"
-echo "################################################"
-echo "################################################"
-echo "#                                              #"
-echo "#   Notre script ne supprime pas les bases de  #"
-echo "#                                              #"
-echo "#           données par sécurité               #"
-echo "#                                              #"
-echo "################################################"
-sleep 4
-fi
+
 fi
 

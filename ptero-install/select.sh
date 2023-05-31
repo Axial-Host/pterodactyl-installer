@@ -3,13 +3,25 @@ rougefonce='\e[0;31m'
 bleue='\e[0;34m'
 neutre='\e[0;m'
 clear
+echo "${rougefonce}################################################"
+echo "#                                              #"
+echo "#                                              #"
+echo "#    /!\ Ce script est sous Copyright /!\      #"
+echo "#                                              #"
+echo "#    /!\ Aucune copie n'est autorisé  /!\      #"
+echo "#                                              #"
+echo "#                                              #"
+echo "################################################${neutre}"
+echo "Début de l'installation dans 5 secondes"
+sleep 5
+clear
 echo "${bleue}################################################################################${neutre}"
 echo "${bleue}#                                                                              #${neutre}"
 echo "${bleue}#${neutre}                 Bienvenue sur le système interfactif Pterodactyl             ${bleue}#${neutre}"
 echo "${bleue}#${neutre}                                                                              ${bleue}#${neutre}"
 echo "#                       Développé et Imaginé pour vous par                     #"
 echo "#                                                                              #"
-echo "#                            ©️  Axial-Host.fr ©️                               #"
+echo "#                            ©️  Axial-Host.fr ©️                                #"
 echo "${rougefonce}#                                                                              #${neutre}"
 echo "${rougefonce}#${neutre}               ©️ Copyright Axial-Host.fr - Mr Mangane Gaétan ©️️                ${rougefonce}#"
 echo "#                                                                              #"
@@ -27,7 +39,6 @@ echo "#      2) Installer l'interface web Pterodactyl                           
 echo "#      3) Installer les wings Pterodactyl                                      #"
 echo "#      4) Désinstaller Pterodactyl                                             #"
 echo "#      5) Configurer un nouvelle utilisateur Pterodactyl                       #"
-echo "#      6) Installer PhpMyAdmin                                                 #"
 echo "#                                                                              #"
 echo "#                                                                              #"
 echo '################################################################################'
@@ -54,7 +65,4 @@ sh ./uninstall.sh
 fi
 if [ $selection = "5" ]; then 
 sh ./user-pterodactyl.sh
-fi
-if [ $selection = "6" ]; then 
-sh ./phpmyadmin-installer.sh
 fi

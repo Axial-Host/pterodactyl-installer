@@ -12,8 +12,8 @@ echo "#    /!\ Aucune copie n'est autorisé  /!\      #"
 echo "#                                              #"
 echo "#                                              #"
 echo "################################################${neutre}"
-echo "Début de l'installation dans 10 secondes"
-sleep 10
+echo "Début de l'installation dans 5 secondes"
+sleep 5
 echo "################################################"
 echo "#                                              #"
 echo "#            Début de l'installation           #"
@@ -107,9 +107,11 @@ echo "#                                              #"
 echo "#       Création de la base de données         #"
 echo "#                                              #"
 echo "################################################"
-    mysql -e "CREATE USER 'axialhostpanel'@'127.0.0.1' IDENTIFIED BY '$mdp';" >/dev/null 2>&1 
+    mysql -e "CREATE USER 'axialhostpanel'@'localhost' IDENTIFIED BY '$mdp';" >/dev/null 2>&1 
     mysql -e "CREATE DATABASE panel;" >/dev/null 2>&1 
-    mysql -e "GRANT ALL PRIVILEGES ON panel.* TO 'axialhostpanel'@'127.0.0.1' WITH GRANT OPTION;" >/dev/null 2>&1 
+    mysql -e "GRANT ALL PRIVILEGES ON panel.* TO 'axialhostpanel'@'localhost' WITH GRANT OPTION;" >/dev/null 2>&1 
+    sleep 3
+    clear
 echo "################################################"
 echo "#                                              #"
 echo "#   Création de la base de données terminée    #"
@@ -120,7 +122,7 @@ sleep 3
     composer install --no-dev --optimize-autoloader --quiet >/dev/null 2>&1 
     php artisan key:generate --force >/dev/null 2>&1 
     clear
-echo "################################################"
+    echo "################################################"
 echo "#                                              #"
 echo "#           Passons au questionnaire           #"
 echo "#                                              #"
@@ -152,58 +154,6 @@ echo "################################################"
     php artisan p:environment:database --host=127.0.0.1 --port=3306 --database=panel --username=axialhostpanel --password=$mdp 
     php artisan p:environment:mail --driver=mail --email=installation@axial-host.fr --from=Axial-Host-Installation 
     clear
-echo "################################################"
-echo "#                                              #"
-echo "#     Paramètrage du pterodactyl en cours      #"
-echo "#                                              #"
-echo "################################################"
-    php artisan migrate --seed --force > /dev/null
-    clear
-echo "################################################"
-echo "#                                              #"
-echo "#     Création de ton premier utilisateur      #"
-echo "#                                              #"
-echo "################################################"
-sleep 2 
-echo "################################################"
-echo "#                                              #"
-echo "#   Quel sera ton identifiant de connexion ?   #"
-echo "#                                              #"
-echo "################################################"
-    read -r -p "Indique ton identifiant de connexion : " user
-echo "################################################"
-echo "#                                              #"
-echo "#             Quel est ton prénom ?            #"
-echo "#                                              #"
-echo "################################################"
-    read -r -p "Indique ton prénom : " prenom
-echo "################################################"
-echo "#                                              #"
-echo "#         Quel est ton nom de famille ?        #"
-echo "#                                              #"
-echo "################################################"
-    read -r -p "Indique ton nom de famille : " famille
-echo "################################################"
-echo "#                                              #"
-echo "#   Quel sera ton mot de passe de connexion ?  #"
-echo "#                                              #"
-echo "################################################"
-    read -r -p "Indique ton mot de passe de connexion : " mdp2
-sleep 3
-clear
-echo "################################################"
-echo "#                                              #"
-echo "#      Création de l'utilisateur en cours      #"
-echo "#                                              #"
-echo "################################################"
-php artisan p:user:make --email=$email --username=$user --name-first=$prenom --name-last=$famille --password=$mdp2
-sleep 10
-echo "################################################"
-echo "#                                              #"
-echo "#      Création de l'utilisateur terminée      #"
-echo "#                                              #"
-echo "################################################"
-clear
 echo "################################################"
 echo "#                                              #"
 echo "#     Activation des services pterodactyl      #"
@@ -293,37 +243,6 @@ echo "#                                              #"
 echo "#   Configuration du serveur web terminée      #"
 echo "#                                              #"
 echo "################################################"
-echo "################################################"
-echo "#                                              #"
-echo "#     Installation de docker en cours...       #"
-echo "#                                              #"
-echo "################################################"
-sleep 3
-echo '[Unit]' >> /etc/systemd/system/wings.service
-echo 'Description=Pterodactyl Wings Daemon' >> /etc/systemd/system/wings.service
-echo 'After=docker.service' >> /etc/systemd/system/wings.service
-echo 'Requires=docker.service' >> /etc/systemd/system/wings.service
-echo 'PartOf=docker.service' >> /etc/systemd/system/wings.service
-
-echo '[Service]' >> /etc/systemd/system/wings.service
-echo 'User=root' >> /etc/systemd/system/wings.service
-echo 'WorkingDirectory=/etc/pterodactyl' >> /etc/systemd/system/wings.service
-echo 'LimitNOFILE=4096' >> /etc/systemd/system/wings.service
-echo 'PIDFile=/var/run/wings/daemon.pid' >> /etc/systemd/system/wings.service
-echo 'ExecStart=/usr/local/bin/wings' >> /etc/systemd/system/wings.service
-echo 'Restart=on-failure' >> /etc/systemd/system/wings.service
-echo 'StartLimitInterval=180' >> /etc/systemd/system/wings.service
-echo 'StartLimitBurst=30' >> /etc/systemd/system/wings.service
-echo 'RestartSec=5s' >> /etc/systemd/system/wings.service
-echo '[Install]' >> /etc/systemd/system/wings.service
-echo 'WantedBy=multi-user.target' >> /etc/systemd/system/wings.service
-
-    sleep 10;
-    curl -sSL https://get.docker.com/ | CHANNEL=stable bash 2> /dev/null
-    systemctl enable --now docker 2> /dev/null
-    mkdir -p /etc/pterodactyl 2> /dev/null2> /dev/null
-    curl -L -o /usr/local/bin/wings "https://github.com/pterodactyl/wings/releases/latest/download/wings_linux_$([[ "$(uname -m)" == "x86_64" ]] && echo "amd64" || echo "arm64")" 2> /dev/null
-    chmod u+x /usr/local/bin/wings 2> /dev/null
 echo '#######################################' 
 echo '#                                     #' 
 echo "#   Merci d'avoir fait confiance au   #" 
@@ -333,6 +252,8 @@ echo "#     Pour installer votre node       #"
 echo "#  rdv sur https://wiki.axial-host.fr #" 
 echo '#                                     #'
 echo '#######################################'
+rm -r /root/axialhost-install/
+
 fi
 if [ $ndd = "n" ] || [ $ndd = "N" ]; then
 echo "################################################"
@@ -370,37 +291,6 @@ echo "#                                              #"
 echo "#   Configuration du serveur web terminée      #"
 echo "#                                              #"
 echo "################################################"
-echo "################################################"
-echo "#                                              #"
-echo "#     Installation de docker en cours...       #"
-echo "#                                              #"
-echo "################################################"
-echo '[Unit]' >> /etc/systemd/system/wings.service
-echo 'Description=Pterodactyl Wings Daemon' >> /etc/systemd/system/wings.service
-echo 'After=docker.service' >> /etc/systemd/system/wings.service
-echo 'Requires=docker.service' >> /etc/systemd/system/wings.service
-echo 'PartOf=docker.service' >> /etc/systemd/system/wings.service
-
-echo '[Service]' >> /etc/systemd/system/wings.service
-echo 'User=root' >> /etc/systemd/system/wings.service
-echo 'WorkingDirectory=/etc/pterodactyl' >> /etc/systemd/system/wings.service
-echo 'LimitNOFILE=4096' >> /etc/systemd/system/wings.service
-echo 'PIDFile=/var/run/wings/daemon.pid' >> /etc/systemd/system/wings.service
-echo 'ExecStart=/usr/local/bin/wings' >> /etc/systemd/system/wings.service
-echo 'Restart=on-failure' >> /etc/systemd/system/wings.service
-echo 'StartLimitInterval=180' >> /etc/systemd/system/wings.service
-echo 'StartLimitBurst=30' >> /etc/systemd/system/wings.service
-echo 'RestartSec=5s' >> /etc/systemd/system/wings.service
-echo '[Install]' >> /etc/systemd/system/wings.service
-echo 'WantedBy=multi-user.target' >> /etc/systemd/system/wings.service
-
-    sleep 10; 2>/dev/null
-    curl -sSL https://get.docker.com/ | CHANNEL=stable bash  2>/dev/null
-    systemctl enable --now docker 2>/dev/null
-    mkdir -p /etc/pterodactyl 2>/dev/null
-    curl -L -o /usr/local/bin/wings "https://github.com/pterodactyl/wings/releases/latest/download/wings_linux_amd64"
-    chmod u+x /usr/local/bin/wings
-
 echo '#######################################' 
 echo '#                                     #' 
 echo "#   Merci d'avoir fait confiance au   #" 
@@ -410,5 +300,7 @@ echo "#     Pour installer votre node       #"
 echo "#  rdv sur https://wiki.axial-host.fr #" 
 echo '#                                     #'
 echo '#######################################'
+rm -r /root/axialhost-install/
+
 fi
 fi
